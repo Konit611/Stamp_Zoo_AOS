@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">두근두근 스탬프 랠리</string>
+    <string name="tab_bingo">빙고</string>
+    <string name="tab_explorer">탐색</string>
+    <string name="tab_fieldguide">가이드</string>
+    <string name="tab_settings">설정</string>
+    <string name="explorer_title">탐색</string>
+    <string name="action_scan">스캔</string>
+    <string name="settings_title">설정</string>
+    <string name="settings_location_label">현재 위치</string>
+    <string name="settings_location_refresh">위치 갱신</string>
+    <string name="toast_need_location">위치 권한이 필요합니다</string>
+    <string name="toast_not_in_facility">해당 시설에서만 스캔 가능합니다</string>
+    <string name="toast_event_coming">이벤트 준비 중</string>
+    <string name="toast_invalid_qr">유효하지 않은 QR입니다</string>
+    
+    <!-- Scanner -->
+    <string name="scanner_permission_title">카메라 권한이 필요합니다</string>
+    <string name="scanner_permission_button">권한 허용</string>
+    <string name="scanner_error_title">카메라 오류</string>
+    <string name="scanner_scan_start">스캔 시작</string>
+    <string name="scanner_scan_stop">스캔 중지</string>
+    
+    <!-- Stamp Collection -->
+    <string name="stamp_collected_success">스탬프를 획득했습니다!</string>
+    <string name="stamp_already_collected">이미 수집된 동물입니다</string>
+    <string name="animal_not_found">동물을 찾을 수 없습니다</string>
+</resources>
+

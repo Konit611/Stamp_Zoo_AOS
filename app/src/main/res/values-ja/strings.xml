@@ -1,0 +1,62 @@
+<resources>
+    <string name="app_name">わくわくスタンプラリー</string>
+    <string name="tab_bingo">ホーム</string>
+    <string name="tab_explorer">動物園</string>
+    <string name="tab_fieldguide">一覧</string>
+    <string name="tab_settings">設定</string>
+    <string name="explorer_title">エクスプローラー</string>
+    <string name="action_scan">スキャン</string>
+    <string name="settings_title">設定</string>
+    <string name="settings_location_label">現在地</string>
+    <string name="settings_location_refresh">位置を更新</string>
+    <string name="toast_need_location">位置情報の許可が必要です</string>
+    <string name="toast_not_in_facility">施設内でのみスキャン可能です</string>
+    <string name="toast_event_coming">イベント準備中</string>
+    <string name="toast_invalid_qr">無効なQRです</string>
+    
+    <!-- Scanner -->
+    <string name="scanner_permission_title">カメラの権限が必要です</string>
+    <string name="scanner_permission_button">権限を許可</string>
+    <string name="scanner_error_title">カメラエラー</string>
+    <string name="scanner_scan_start">スキャン開始</string>
+    <string name="scanner_scan_stop">スキャン停止</string>
+    
+    <!-- Stamp Collection -->
+    <string name="stamp_collected_success">スタンプを獲得しました！</string>
+    <string name="stamp_already_collected">すでに収集された動物です</string>
+    <string name="animal_not_found">動物を見つけることができません</string>
+    
+    <!-- App Info -->
+    <string name="app_info">アプリ情報</string>
+    <string name="project_title">北海道産いきもの保全プロジェクト</string>
+    <string name="project_description">北海道産いきもの保全プロジェクトとは、北海道内の動物園・水族館９園館が連携し、北海道に生息している野生生物の保全を目指し積極的に調査や研究、普及啓発等を実施していくプロジェクトです。\n\n協同園館:\n• 札幌市円山動物園\n• 旭川市旭山動物園\n• おびひろ動物園\n• 釧路市動物園\n• 小樽水族館\n• 新さっぽろサンピアザ水族館\n• 登別マリンパークニクス\n• サケのふるさと千歳水族館\n• AOAO SAPPORO\n\n具体的な活動内容:\n• 北海道の野生生物の域内・域外保全にかかる活動\n• 北海道の野生生物の保全に関する調査・研究\n• 教育普及啓発活動\n• 職員研修\n• 施設の相互利活用</string>
+    
+    <!-- Bingo Home -->
+    <string name="bingo_home_title">ワクワク\nスタンプラリー</string>
+    <string name="bingo_qr_button">QRでスタンプを取得</string>
+    
+    <!-- Bingo Detail -->
+    <string name="bingo_detail">ビンゴ詳細</string>
+    <string name="stamp_rally_title">ワクワク\nスタンプラリー</string>
+    <string name="stamp_rally_description">動物園と水族館を探検して、様々な動物に出会いましょう！QRコードをスキャンしてスタンプを集め、ビンゴを完成させましょう。\n\n各動物の特別な物語と一緒に楽しい学習体験を提供します。すべてのスタンプを集めて特別な報酬を受け取りましょう！\n\n家族みんなで楽しむ教育的で楽しい体験があなたを待っています。</string>
+    
+    <!-- Explorer -->
+    <string name="explorer_participating">参加している</string>
+    <string name="explorer_zoos_aquariums">動物園・水族館</string>
+    <string name="category_all">全体</string>
+    <string name="category_zoo">動物園</string>
+    <string name="category_aquarium">水族館</string>
+    <string name="see_animals">動物を見に</string>
+    <string name="location_unknown">位置情報なし</string>
+    
+    <!-- Field Guide -->
+    <string name="fieldguide_collected">収集した</string>
+    <string name="fieldguide_animal_guide">動物図鑑を見る</string>
+    <string name="animal_detail_collecting">この動物の詳細情報を収集中です。</string>
+    
+    <!-- Settings -->
+    <string name="settings_language">言語設定</string>
+    <string name="settings_app_info">アプリ情報</string>
+</resources>
+
+

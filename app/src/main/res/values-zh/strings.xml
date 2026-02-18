@@ -1,0 +1,62 @@
+<resources>
+    <string name="app_name">激动人心的印章拉力赛</string>
+    <string name="tab_bingo">主页</string>
+    <string name="tab_explorer">动物园</string>
+    <string name="tab_fieldguide">图鉴</string>
+    <string name="tab_settings">设置</string>
+    <string name="explorer_title">探索</string>
+    <string name="action_scan">扫描</string>
+    <string name="settings_title">设置</string>
+    <string name="settings_location_label">当前位置</string>
+    <string name="settings_location_refresh">刷新位置</string>
+    <string name="toast_need_location">需要位置权限</string>
+    <string name="toast_not_in_facility">仅限在设施内扫描</string>
+    <string name="toast_event_coming">活动即将推出</string>
+    <string name="toast_invalid_qr">无效的QR码</string>
+    
+    <!-- Scanner -->
+    <string name="scanner_permission_title">需要相机权限</string>
+    <string name="scanner_permission_button">授予权限</string>
+    <string name="scanner_error_title">相机错误</string>
+    <string name="scanner_scan_start">开始扫描</string>
+    <string name="scanner_scan_stop">停止扫描</string>
+    
+    <!-- Stamp Collection -->
+    <string name="stamp_collected_success">获得邮票！</string>
+    <string name="stamp_already_collected">动物已收集</string>
+    <string name="animal_not_found">找不到动物</string>
+    
+    <!-- App Info -->
+    <string name="app_info">应用信息</string>
+    <string name="project_title">北海道生物保护项目</string>
+    <string name="project_description">北海道生物保护项目是北海道9个动物园和水族馆联合开展的一项计划，积极开展调查、研究和教育推广活动，旨在保护北海道本地野生动物。\n\n合作设施：\n• 札幌市圆山动物园\n• 旭川市旭山动物园\n• 带广动物园\n• 钏路市动物园\n• 小樽水族馆\n• 新札幌太阳广场水族馆\n• 登别海洋公园尼克斯\n• 鲑鱼故乡千岁水族馆\n• AOAO SAPPORO\n\n主要活动：\n• 北海道野生动物的就地和迁地保护活动\n• 北海道野生动物保护相关调查研究\n• 教育推广活动\n• 员工培训\n• 设施的相互利用</string>
+    
+    <!-- Bingo Home -->
+    <string name="bingo_home_title">激动人心的\n邮票拉力赛</string>
+    <string name="bingo_qr_button">用QR获取邮票</string>
+    
+    <!-- Bingo Detail -->
+    <string name="bingo_detail">宾果详情</string>
+    <string name="stamp_rally_title">激动人心的\n邮票拉力赛</string>
+    <string name="stamp_rally_description">探索动物园和水族馆，遇见各种动物！扫描QR码收集邮票，完成宾果游戏。\n\n每个动物都有特别的故事，为您提供有趣的学习体验。收集所有邮票获得特别奖励！\n\n适合全家人参与的教育和娱乐体验等待着您。</string>
+    
+    <!-- Explorer -->
+    <string name="explorer_participating">参与的</string>
+    <string name="explorer_zoos_aquariums">动物园・水族馆</string>
+    <string name="category_all">全部</string>
+    <string name="category_zoo">动物园</string>
+    <string name="category_aquarium">水族馆</string>
+    <string name="see_animals">查看动物</string>
+    <string name="location_unknown">无位置信息</string>
+    
+    <!-- Field Guide -->
+    <string name="fieldguide_collected">收集的</string>
+    <string name="fieldguide_animal_guide">动物图鉴</string>
+    <string name="animal_detail_collecting">正在收集这个动物的详细信息。</string>
+    
+    <!-- Settings -->
+    <string name="settings_language">语言设置</string>
+    <string name="settings_app_info">应用信息</string>
+</resources>
+
+

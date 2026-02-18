@@ -1,0 +1,60 @@
+<resources>
+    <string name="app_name">두근두근 스탬프 랠리</string>
+    <string name="tab_bingo">홈</string>
+    <string name="tab_explorer">동물원</string>
+    <string name="tab_fieldguide">일람</string>
+    <string name="tab_settings">설정</string>
+    <string name="explorer_title">탐험가</string>
+    <string name="action_scan">스캔</string>
+    <string name="settings_title">설정</string>
+    <string name="settings_location_label">현재 위치</string>
+    <string name="settings_location_refresh">위치 새로고침</string>
+    <string name="toast_need_location">위치 권한이 필요합니다</string>
+    <string name="toast_not_in_facility">시설에서만 스캔 가능합니다</string>
+    <string name="toast_event_coming">이벤트 준비 중</string>
+    <string name="toast_invalid_qr">잘못된 QR 코드</string>
+    
+    <!-- Scanner -->
+    <string name="scanner_permission_title">카메라 권한이 필요합니다</string>
+    <string name="scanner_permission_button">권한 허용</string>
+    <string name="scanner_error_title">카메라 오류</string>
+    <string name="scanner_scan_start">스캔 시작</string>
+    <string name="scanner_scan_stop">스캔 중지</string>
+    
+    <!-- Stamp Collection -->
+    <string name="stamp_collected_success">스탬프를 획득했습니다!</string>
+    <string name="stamp_already_collected">이미 수집된 동물입니다</string>
+    <string name="animal_not_found">동물을 찾을 수 없습니다</string>
+    
+    <!-- App Info -->
+    <string name="app_info">앱 정보</string>
+    <string name="project_title">홋카이도 생물 보전 프로젝트</string>
+    <string name="project_description">홋카이도 생물 보전 프로젝트는 홋카이도 내 동물원·수족관 9개 시설이 연계하여 홋카이도에 서식하는 야생생물의 보전을 목표로 적극적으로 조사와 연구, 보급 계몽 등을 실시하는 프로젝트입니다.\n\n협력 시설:\n• 삿포로시 마루야마 동물원\n• 아사히카와시 아사히야마 동물원\n• 오비히로 동물원\n• 구시로시 동물원\n• 오타루 수족관\n• 신삿포로 선피아자 수족관\n• 노보리베츠 마린파크 닉스\n• 연어의 고향 치토세 수족관\n• AOAO SAPPORO\n\n주요 활동:\n• 북해도 야생생물의 역내·역외 보전 활동\n• 북해도 야생생물 보전 관련 조사·연구\n• 교육 보급 계몽 활동\n• 직원 연수\n• 시설의 상호 이용</string>
+    
+    <!-- Bingo Home -->
+    <string name="bingo_home_title">와쿠와쿠\n스탬프 랠리</string>
+    <string name="bingo_qr_button">QR로 스탬프 취득</string>
+    
+    <!-- Bingo Detail -->
+    <string name="bingo_detail">빙고 상세</string>
+    <string name="stamp_rally_title">와쿠와쿠\n스탬프 랠리</string>
+    <string name="stamp_rally_description">동물원과 수족관을 탐험하며 다양한 동물들을 만나보세요! QR 코드를 스캔하여 스탬프를 수집하고, 빙고를 완성해보세요.\n\n각 동물들의 특별한 이야기와 함께 재미있는 학습 경험을 제공합니다. 모든 스탬프를 모아서 특별한 보상을 받아보세요!\n\n가족과 함께 즐기는 교육적이고 재미있는 체험이 여러분을 기다리고 있습니다.</string>
+    
+    <!-- Explorer -->
+    <string name="explorer_participating">참가하고 있는</string>
+    <string name="explorer_zoos_aquariums">동물원・수족관</string>
+    <string name="category_all">전체</string>
+    <string name="category_zoo">동물원</string>
+    <string name="category_aquarium">수족관</string>
+    <string name="see_animals">동물을 보러</string>
+    <string name="location_unknown">위치 정보 없음</string>
+    
+    <!-- Field Guide -->
+    <string name="fieldguide_collected">수집한</string>
+    <string name="fieldguide_animal_guide">동물도감을 보기</string>
+    <string name="animal_detail_collecting">이 동물에 대한 자세한 정보를 수집 중입니다.</string>
+    
+    <!-- Settings -->
+    <string name="settings_language">언어 설정</string>
+    <string name="settings_app_info">앱 정보</string>
+</resources>
