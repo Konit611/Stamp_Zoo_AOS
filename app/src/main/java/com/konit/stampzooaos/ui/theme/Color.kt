@@ -11,6 +11,12 @@ val ZooDeepBlue = Color(0xFF012340)        // 딥 블루
 val ZooDeepGreen = Color(0xFF025939)       // 딥 그린
 val ZooPopPink = Color(0xFFEEA1FF)         // 팝업 핑크
 
+// Semantic Colors
+val ZooBackground = Color(0xFFF2F2F7)
+val ZooAccentGreen = Color(0xFF00C853)
+val ZooAccentBlue = Color(0xFF007AFF)
+val ZooNavyBlue = Color(0xFF1A3366)
+
 // Light Theme Colors
 val md_theme_light_primary = ZooDeepGreen
 val md_theme_light_onPrimary = ZooWhite

@@ -36,6 +36,7 @@ abstract class StampZooDatabase : RoomDatabase() {
                     StampZooDatabase::class.java,
                     "stamp_zoo_database"
                 )
+                    // TODO: 프로덕션 출시 전 마이그레이션 전략으로 교체
                     .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance

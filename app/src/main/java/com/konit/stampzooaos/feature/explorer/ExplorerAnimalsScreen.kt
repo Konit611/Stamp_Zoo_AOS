@@ -1,6 +1,5 @@
 package com.konit.stampzooaos.feature.explorer
 
-import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,30 +27,40 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.konit.stampzooaos.R
 import com.konit.stampzooaos.core.localization.getCurrentLanguage
 import com.konit.stampzooaos.core.localization.getLocalizedName
 import com.konit.stampzooaos.core.localization.getLocalizedDetail
+import com.konit.stampzooaos.core.ui.ZooImage
 import com.konit.stampzooaos.data.Animal
 import com.konit.stampzooaos.data.Facility
 import com.konit.stampzooaos.data.ZooRepository
+import com.konit.stampzooaos.ui.theme.ZooBackground
+import com.konit.stampzooaos.ui.theme.ZooPopGreen
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ExplorerAnimalsViewModel(app: Application) : AndroidViewModel(app) {
-    private val repo = ZooRepository(app)
+@HiltViewModel
+class ExplorerAnimalsViewModel @Inject constructor(
+    private val repo: ZooRepository
+) : ViewModel() {
     private val _animals = MutableStateFlow<List<Animal>>(emptyList())
     val animals: StateFlow<List<Animal>> = _animals
     
@@ -67,7 +76,7 @@ class ExplorerAnimalsViewModel(app: Application) : AndroidViewModel(app) {
 @Composable
 fun ExplorerAnimalsScreen(
     facility: Facility,
-    vm: ExplorerAnimalsViewModel = viewModel(),
+    vm: ExplorerAnimalsViewModel = hiltViewModel(),
     onBackClick: () -> Unit = {}
 ) {
     val currentLanguage = getCurrentLanguage()
@@ -75,7 +84,7 @@ fun ExplorerAnimalsScreen(
     val pagerState = rememberPagerState(pageCount = { animals.size })
     
     // 동물 목록 로드
-    androidx.compose.runtime.LaunchedEffect(facility.facilityId) {
+    LaunchedEffect(facility.facilityId) {
         vm.loadAnimals(facility.facilityId)
     }
     
@@ -108,7 +117,7 @@ fun ExplorerAnimalsScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFF2F2F7),
+                    containerColor = ZooBackground,
                     titleContentColor = Color.Black
                 )
             )
@@ -123,10 +132,10 @@ fun ExplorerAnimalsScreen(
                         start = 0.dp,
                         end = 0.dp
                     )
-                    .background(Color(0xFFF2F2F7)),
+                    .background(ZooBackground),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = "동물 정보를 불러오는 중...")
+                Text(text = stringResource(id = R.string.loading_animals))
             }
         } else {
             HorizontalPager(
@@ -138,7 +147,7 @@ fun ExplorerAnimalsScreen(
                         start = 0.dp,
                         end = 0.dp
                     )
-                    .background(Color(0xFFF2F2F7))
+                    .background(ZooBackground)
             ) { page ->
                 AnimalDetailCard(animal = animals[page])
             }
@@ -163,7 +172,7 @@ fun AnimalDetailCard(animal: Animal) {
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp)
                 .clip(RoundedCornerShape(20.dp))
-                .background(com.konit.stampzooaos.ui.theme.ZooPopGreen.copy(alpha = 0.3f))
+                .background(ZooPopGreen.copy(alpha = 0.3f))
         ) {
             // 동물 이미지
             Box(
@@ -175,7 +184,7 @@ fun AnimalDetailCard(animal: Animal) {
                     .clip(RoundedCornerShape(16.dp))
                     .background(Color.Blue.copy(alpha = 0.7f))
             ) {
-                com.konit.stampzooaos.core.ui.ZooImage(
+                ZooImage(
                     resourceName = animal.image,
                     contentDescription = animal.getLocalizedName(currentLanguage),
                     modifier = Modifier.fillMaxSize()

@@ -1,9 +1,12 @@
 package com.konit.stampzooaos.feature.bingo
 
-import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +21,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,21 +33,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.konit.stampzooaos.R
 import com.konit.stampzooaos.core.localization.getCurrentLanguage
 import com.konit.stampzooaos.core.localization.getLocalizedName
+import com.konit.stampzooaos.core.ui.ZooImage
 import com.konit.stampzooaos.data.Animal
 import com.konit.stampzooaos.data.BingoCard
 import com.konit.stampzooaos.data.ZooRepository
 import com.konit.stampzooaos.data.local.entity.BingoAnimalEntity
+import com.konit.stampzooaos.ui.theme.ZooBackground
+import com.konit.stampzooaos.ui.theme.ZooPointBlack
+import com.konit.stampzooaos.ui.theme.ZooPopGreen
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class StampSlot(
     val bingoNumber: Int,
@@ -50,8 +62,10 @@ data class StampSlot(
     val isCollected: Boolean
 )
 
-class BingoHomeViewModel(app: Application) : AndroidViewModel(app) {
-    private val repo = ZooRepository(app)
+@HiltViewModel
+class BingoHomeViewModel @Inject constructor(
+    private val repo: ZooRepository
+) : ViewModel() {
     private val _bingo = MutableStateFlow<BingoCard?>(null)
     val bingo: StateFlow<BingoCard?> = _bingo
     
@@ -113,7 +127,7 @@ class BingoHomeViewModel(app: Application) : AndroidViewModel(app) {
 
 @Composable
 fun BingoHomeScreen(
-    vm: BingoHomeViewModel = viewModel(),
+    vm: BingoHomeViewModel = hiltViewModel(),
     onSettingsClick: () -> Unit = {},
     onDetailClick: () -> Unit = {},
     onQRClick: () -> Unit = {},
@@ -123,12 +137,12 @@ fun BingoHomeScreen(
     val stampSlots by vm.stampSlots.collectAsState()
     val collectedCount by vm.collectedCount.collectAsState()
     
-    androidx.compose.foundation.layout.Box(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF2F2F7))
+            .background(ZooBackground)
     ) {
-        androidx.compose.foundation.layout.Column(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .statusBarsPadding()
@@ -138,29 +152,29 @@ fun BingoHomeScreen(
                 onAppInfoClick = onAppInfoClick,
                 onSettingsClick = onSettingsClick
             )
-            
+
             // 메인 컨텐츠
-            androidx.compose.foundation.layout.Column(
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 20.dp)
             ) {
-                androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(12.dp))
-                
+                Spacer(modifier = Modifier.height(12.dp))
+
                 // 제목
                 TitleSection(onDetailClick = onDetailClick)
-                
-                androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(16.dp))
-                
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 // 스탬프 그리드
                 StampGrid(stampSlots = stampSlots)
-                
-                androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(16.dp))
-                
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 // QR 버튼
                 QRButton(onClick = onQRClick)
-                
-                androidx.compose.foundation.layout.Spacer(modifier = Modifier.weight(1f))
+
+                Spacer(modifier = Modifier.weight(1f))
             }
         }
     }
@@ -172,7 +186,7 @@ fun HeaderSection(
     onAppInfoClick: () -> Unit,
     onSettingsClick: () -> Unit
 ) {
-    androidx.compose.foundation.layout.Row(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
@@ -181,7 +195,7 @@ fun HeaderSection(
         verticalAlignment = Alignment.CenterVertically
     ) {
         // 앱 로고
-        androidx.compose.foundation.layout.Box(
+        Box(
             modifier = Modifier
                 .size(55.dp)
                 .clip(CircleShape)
@@ -189,17 +203,17 @@ fun HeaderSection(
                 .clickable { onAppInfoClick() },
             contentAlignment = Alignment.Center
         ) {
-            com.konit.stampzooaos.core.ui.ZooImage(
+            ZooImage(
                 resourceName = "app_logo",
                 contentDescription = "App Logo",
                 modifier = Modifier.size(45.dp)
             )
         }
-        
+
         // 설정 아이콘
-        androidx.compose.material3.IconButton(onClick = onSettingsClick) {
-            androidx.compose.material3.Icon(
-                imageVector = androidx.compose.material.icons.Icons.Default.Settings,
+        IconButton(onClick = onSettingsClick) {
+            Icon(
+                imageVector = Icons.Default.Settings,
                 contentDescription = "Settings",
                 tint = Color.Black,
                 modifier = Modifier.size(28.dp)
@@ -211,7 +225,7 @@ fun HeaderSection(
 // 제목 섹션
 @Composable
 fun TitleSection(onDetailClick: () -> Unit) {
-    androidx.compose.foundation.layout.Row(
+    Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -219,21 +233,21 @@ fun TitleSection(onDetailClick: () -> Unit) {
         Text(
             text = stringResource(id = R.string.bingo_home_title),
             style = MaterialTheme.typography.headlineLarge,
-            fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+            fontWeight = FontWeight.Bold,
             color = Color.Black,
             lineHeight = 40.sp
         )
-        
+
         // 화살표 버튼
-        androidx.compose.foundation.layout.Box(
+        Box(
             modifier = Modifier
                 .size(40.dp)
                 .background(Color.Black, shape = CircleShape)
                 .clickable { onDetailClick() },
             contentAlignment = Alignment.Center
         ) {
-            androidx.compose.material3.Icon(
-                imageVector = androidx.compose.material.icons.Icons.AutoMirrored.Filled.ArrowForward,
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = "Detail",
                 tint = Color.White,
                 modifier = Modifier.size(20.dp)
@@ -245,11 +259,11 @@ fun TitleSection(onDetailClick: () -> Unit) {
 // 스탬프 그리드
 @Composable
 fun StampGrid(stampSlots: List<StampSlot>) {
-    androidx.compose.foundation.layout.Column(
+    Column(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         for (row in 0..2) {
-            androidx.compose.foundation.layout.Row(
+            Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
@@ -276,7 +290,7 @@ fun QRButton(onClick: () -> Unit) {
             .fillMaxWidth()
             .height(50.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = com.konit.stampzooaos.ui.theme.ZooPopGreen,
+            containerColor = ZooPopGreen,
             contentColor = Color.Black
         ),
         shape = RoundedCornerShape(25.dp)
@@ -284,7 +298,7 @@ fun QRButton(onClick: () -> Unit) {
         Text(
             text = stringResource(id = R.string.bingo_qr_button),
             style = MaterialTheme.typography.titleMedium,
-            fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold
         )
     }
 }
@@ -294,16 +308,16 @@ fun QRButton(onClick: () -> Unit) {
 fun StampCard(slot: StampSlot, modifier: Modifier = Modifier) {
     val currentLanguage = getCurrentLanguage()
     
-    androidx.compose.foundation.layout.Box(
+    Box(
         modifier = modifier
             .aspectRatio(1f)
             .clip(RoundedCornerShape(15.dp))
-            .background(com.konit.stampzooaos.ui.theme.ZooPointBlack),
+            .background(ZooPointBlack),
         contentAlignment = Alignment.Center
     ) {
         if (slot.isCollected && slot.animal != null) {
             // 수집된 스탬프 이미지
-            com.konit.stampzooaos.core.ui.ZooImage(
+            ZooImage(
                 resourceName = slot.animal.stampImage,
                 contentDescription = slot.animal.getLocalizedName(currentLanguage),
                 modifier = Modifier

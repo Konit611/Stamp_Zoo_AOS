@@ -62,6 +62,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import com.konit.stampzooaos.R
+import com.konit.stampzooaos.ui.theme.ZooNavyBlue
 import com.konit.stampzooaos.ui.theme.ZooWhite
 import androidx.compose.ui.res.stringResource
 import java.util.concurrent.Executors
@@ -231,7 +232,7 @@ fun ScannerScreen(onResult: (String) -> Unit, onBackClick: () -> Unit = {}) {
                     .height(50.dp)
                     .padding(horizontal = 20.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isScanning) Color.Red else Color(0xFF1A3366),
+                    containerColor = if (isScanning) Color.Red else ZooNavyBlue,
                     contentColor = Color.White,
                     disabledContainerColor = Color.Gray,
                     disabledContentColor = Color.White
@@ -331,7 +332,7 @@ private fun CameraPreviewView(
                     )
                     Log.d("ScannerScreen", "Camera bound successfully")
                 } catch (e: Exception) {
-                    onError("카메라를 초기화할 수 없습니다: ${e.message}")
+                    onError("Camera init error: ${e.message}")
                     Log.e("ScannerScreen", "Camera initialization error", e)
                 }
             }, ContextCompat.getMainExecutor(ctx))

@@ -1,11 +1,11 @@
 package com.konit.stampzooaos.feature.fieldguide
 
-import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +21,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -43,19 +42,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.konit.stampzooaos.R
 import com.konit.stampzooaos.core.localization.getCurrentLanguage
 import com.konit.stampzooaos.core.localization.getLocalizedName
 import com.konit.stampzooaos.core.localization.getLocalizedDetail
+import com.konit.stampzooaos.core.ui.ZooImage
 import com.konit.stampzooaos.data.Animal
 import com.konit.stampzooaos.data.ZooRepository
 import com.konit.stampzooaos.data.local.entity.BingoAnimalEntity
+import com.konit.stampzooaos.ui.theme.ZooBackground
+import com.konit.stampzooaos.ui.theme.ZooPointBlack
+import com.konit.stampzooaos.ui.theme.ZooPopGreen
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class AnimalGuideSlot(
     val index: Int,
@@ -63,8 +68,10 @@ data class AnimalGuideSlot(
     val isCollected: Boolean
 )
 
-class FieldGuideViewModel(app: Application) : AndroidViewModel(app) {
-    private val repo = ZooRepository(app)
+@HiltViewModel
+class FieldGuideViewModel @Inject constructor(
+    private val repo: ZooRepository
+) : ViewModel() {
     
     private val _collectedAnimals = MutableStateFlow<List<Animal>>(emptyList())
     val collectedAnimals: StateFlow<List<Animal>> = _collectedAnimals
@@ -73,6 +80,9 @@ class FieldGuideViewModel(app: Application) : AndroidViewModel(app) {
     val guideSlots: StateFlow<List<AnimalGuideSlot>> = _guideSlots
     
     private val zooData by lazy { repo.loadZooData() }
+
+    val allAnimals: List<Animal>
+        get() = zooData.animals
 
     init {
         // 수집된 동물 로드
@@ -85,7 +95,7 @@ class FieldGuideViewModel(app: Application) : AndroidViewModel(app) {
     
     private fun updateCollectedAnimals(bingoAnimals: List<BingoAnimalEntity>) {
         val collectedAnimalIds = bingoAnimals.map { it.animalId }.toSet()
-        val collected = zooData?.animals?.filter { it.id in collectedAnimalIds } ?: emptyList()
+        val collected = zooData.animals.filter { it.id in collectedAnimalIds }
         _collectedAnimals.value = collected
         
         // 도감 슬롯 계산 (수집된 동물 + 여유분, 3의 배수로 맞춤)
@@ -107,14 +117,14 @@ class FieldGuideViewModel(app: Application) : AndroidViewModel(app) {
 }
 
 @Composable
-fun FieldGuideList(onClick: (Animal) -> Unit = {}, vm: FieldGuideViewModel = viewModel()) {
+fun FieldGuideList(onClick: (Animal) -> Unit = {}, vm: FieldGuideViewModel = hiltViewModel()) {
     val currentLanguage = getCurrentLanguage()
     val guideSlots by vm.guideSlots.collectAsState()
     
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF2F2F7))
+            .background(ZooBackground)
     ) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),
@@ -176,13 +186,13 @@ fun AnimalGuideCell(
         modifier = Modifier
             .aspectRatio(1f)
             .clip(RoundedCornerShape(15.dp))
-            .background(com.konit.stampzooaos.ui.theme.ZooPointBlack)
+            .background(ZooPointBlack)
             .clickable(enabled = slot.isCollected, onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
         if (slot.animal != null) {
             // 수집된 동물 - 스탬프 이미지 표시
-            com.konit.stampzooaos.core.ui.ZooImage(
+            ZooImage(
                 resourceName = slot.animal.stampImage,
                 contentDescription = slot.animal.getLocalizedName(currentLanguage),
                 modifier = Modifier.fillMaxSize()
@@ -228,7 +238,7 @@ fun FieldGuideDetail(animal: Animal, onBackClick: (() -> Unit)? = null) {
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFF2F2F7),
+                    containerColor = ZooBackground,
                     titleContentColor = Color.Black
                 )
             )
@@ -237,7 +247,7 @@ fun FieldGuideDetail(animal: Animal, onBackClick: (() -> Unit)? = null) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFF2F2F7))
+                .background(ZooBackground)
                 .padding(
                     top = padding.calculateTopPadding(),
                     start = 0.dp,
@@ -254,7 +264,7 @@ fun FieldGuideDetail(animal: Animal, onBackClick: (() -> Unit)? = null) {
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
                     .clip(RoundedCornerShape(20.dp))
-                    .background(com.konit.stampzooaos.ui.theme.ZooPopGreen.copy(alpha = 0.3f))
+                    .background(ZooPopGreen.copy(alpha = 0.3f))
             ) {
                 // 동물 이미지
                 Box(
@@ -266,7 +276,7 @@ fun FieldGuideDetail(animal: Animal, onBackClick: (() -> Unit)? = null) {
                         .clip(RoundedCornerShape(16.dp))
                         .background(Color.Blue.copy(alpha = 0.7f))
                 ) {
-                    com.konit.stampzooaos.core.ui.ZooImage(
+                    ZooImage(
                         resourceName = animal.image,
                         contentDescription = animal.getLocalizedName(currentLanguage),
                         modifier = Modifier.fillMaxSize()

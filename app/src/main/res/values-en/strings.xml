@@ -57,6 +57,10 @@
     <!-- Settings -->
     <string name="settings_language">Language Settings</string>
     <string name="settings_app_info">App Info</string>
+
+    <!-- Loading -->
+    <string name="loading_animals">Loading animals…</string>
+    <string name="camera_init_error">Unable to initialize camera</string>
 </resources>
 
 

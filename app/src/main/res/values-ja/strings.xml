@@ -57,6 +57,10 @@
     <!-- Settings -->
     <string name="settings_language">言語設定</string>
     <string name="settings_app_info">アプリ情報</string>
+
+    <!-- Loading -->
+    <string name="loading_animals">動物情報を読み込み中…</string>
+    <string name="camera_init_error">カメラを初期化できません</string>
 </resources>
 
 

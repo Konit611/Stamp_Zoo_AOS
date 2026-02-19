@@ -1,13 +1,10 @@
 package com.konit.stampzooaos.ui.navigation
 
-// 👇 FIX: All imports are correct and organized.
-import android.app.Application
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.ui.unit.dp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
@@ -15,116 +12,95 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlinx.coroutines.launch
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import androidx.navigation.toRoute
 import com.konit.stampzooaos.R
-import com.konit.stampzooaos.core.qr.QRPayload
-import com.konit.stampzooaos.core.qr.QRParser
-import com.konit.stampzooaos.data.ZooRepository
+import com.konit.stampzooaos.feature.bingo.AppInfoScreen
+import com.konit.stampzooaos.feature.bingo.BingoDetailScreen
 import com.konit.stampzooaos.feature.bingo.BingoHomeScreen
+import com.konit.stampzooaos.feature.explorer.ExplorerAnimalsScreen
 import com.konit.stampzooaos.feature.explorer.ExplorerDetailScreen
 import com.konit.stampzooaos.feature.explorer.ExplorerScreen
 import com.konit.stampzooaos.feature.explorer.ExplorerViewModel
+import com.konit.stampzooaos.feature.fieldguide.FieldGuideViewModel
 import com.konit.stampzooaos.feature.fieldguide.FieldGuideDetail
 import com.konit.stampzooaos.feature.fieldguide.FieldGuideList
 import com.konit.stampzooaos.feature.scanner.ScannerScreen
+import com.konit.stampzooaos.feature.scanner.ScannerViewModel
+import com.konit.stampzooaos.feature.settings.LanguageSelectionScreen
 import com.konit.stampzooaos.feature.settings.SettingsScreen
+import com.konit.stampzooaos.ui.theme.ZooPointBlack
+import com.konit.stampzooaos.ui.theme.ZooPopGreen
+import com.konit.stampzooaos.ui.theme.ZooWhite
 
 @Composable
 fun RootNavHost() {
     val navController = rememberNavController()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-    val currentRoute = currentDestination?.route ?: ""
-    
-    // 세부 화면 라우트들 (하단 padding을 적용하지 않을 화면)
-    val detailRoutes = listOf(
-        "bingoDetail",
-        "appInfo",
-        "settings",
-        "languageSelection",
-        "scanner",
-        "explorer/detail/",
-        "explorer/animals/",
-        "fieldGuide/detail/"
-    )
-    
-    val isDetailScreen = detailRoutes.any { route ->
-        currentRoute == route.trimEnd('/') || currentRoute.startsWith(route)
-    }
-    
+
     Scaffold(
-        contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0, 0, 0, 0),
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
-            // 탭바는 항상 표시
             BottomBar(navController = navController)
         }
     ) { padding ->
         NavHost(
             navController = navController,
-            startDestination = Destinations.BingoHome.route,
+            startDestination = BingoHomeRoute,
             modifier = Modifier.padding(padding)
         ) {
-            composable(Destinations.BingoHome.route) { 
+            composable<BingoHomeRoute> {
                 BingoHomeScreen(
-                    onQRClick = { navController.navigate("scanner") },
-                    onSettingsClick = { navController.navigate("settings") },
-                    onAppInfoClick = { navController.navigate("appInfo") },
-                    onDetailClick = { navController.navigate("bingoDetail") }
+                    onQRClick = { navController.navigate(ScannerRoute) },
+                    onSettingsClick = { navController.navigate(SettingsRoute) },
+                    onAppInfoClick = { navController.navigate(AppInfoRoute) },
+                    onDetailClick = { navController.navigate(BingoDetailRoute) }
                 )
             }
-            composable(Destinations.Explorer.route) { ExplorerScreen(navController = navController) }
-            composable(
-                route = "explorer/detail/{facilityId}",
-                arguments = listOf(navArgument("facilityId") { type = NavType.StringType })
-            ) { backStack ->
-                val id = backStack.arguments?.getString("facilityId")
-                val vm = viewModel<ExplorerViewModel>()
+            composable<ExplorerRoute> {
+                ExplorerScreen(navController = navController)
+            }
+            composable<ExplorerDetailRoute> { backStack ->
+                val route = backStack.toRoute<ExplorerDetailRoute>()
+                val vm = hiltViewModel<ExplorerViewModel>()
                 val list by vm.facilities.collectAsState()
-                val facility = list.firstOrNull { it.id == id }
+                val facility = list.firstOrNull { it.id == route.facilityId }
                 if (facility != null) {
                     ExplorerDetailScreen(
                         facility = facility,
                         onBackClick = { navController.popBackStack() },
-                        onAnimalsClick = { navController.navigate("explorer/animals/${facility.id}") }
+                        onAnimalsClick = { navController.navigate(ExplorerAnimalsRoute(facility.id)) }
                     )
                 } else {
                     PlaceholderScreen(label = "Facility not found")
                 }
             }
-            composable(
-                route = "explorer/animals/{facilityId}",
-                arguments = listOf(navArgument("facilityId") { type = NavType.StringType })
-            ) { backStack ->
-                val id = backStack.arguments?.getString("facilityId")
-                val vm = viewModel<ExplorerViewModel>()
+            composable<ExplorerAnimalsRoute> { backStack ->
+                val route = backStack.toRoute<ExplorerAnimalsRoute>()
+                val vm = hiltViewModel<ExplorerViewModel>()
                 val list by vm.facilities.collectAsState()
-                val facility = list.firstOrNull { it.id == id }
+                val facility = list.firstOrNull { it.id == route.facilityId }
                 if (facility != null) {
-                    com.konit.stampzooaos.feature.explorer.ExplorerAnimalsScreen(
+                    ExplorerAnimalsScreen(
                         facility = facility,
                         onBackClick = { navController.popBackStack() }
                     )
@@ -132,117 +108,96 @@ fun RootNavHost() {
                     PlaceholderScreen(label = "Facility not found")
                 }
             }
-            composable(Destinations.FieldGuide.route) {
+            composable<FieldGuideRoute> {
                 FieldGuideList(onClick = { animal ->
-                    navController.navigate("fieldGuide/detail/${animal.id}")
+                    navController.navigate(FieldGuideDetailRoute(animal.id))
                 })
             }
-            composable(
-                route = "fieldGuide/detail/{animalId}",
-                arguments = listOf(navArgument("animalId") { type = NavType.StringType })
-            ) { backStack ->
-                val id = backStack.arguments?.getString("animalId")
-                
-                // Repository에서 동물 로드 시도
-                val context = LocalContext.current
-                val app = context.applicationContext as Application
-                val repo = remember { ZooRepository(app) }
-                val data = repo.loadZooData()
-                val animal = data.animals.firstOrNull { it.id == id }
-                
+            composable<FieldGuideDetailRoute> { backStack ->
+                val route = backStack.toRoute<FieldGuideDetailRoute>()
+                val vm = hiltViewModel<FieldGuideViewModel>()
+                val collected by vm.collectedAnimals.collectAsState()
+                val zooData = vm.allAnimals
+                val animal = zooData.firstOrNull { it.id == route.animalId }
+                    ?: collected.firstOrNull { it.id == route.animalId }
+
                 if (animal != null) {
                     FieldGuideDetail(animal = animal, onBackClick = { navController.popBackStack() })
                 } else {
-                    PlaceholderScreen(label = "Animal not found: $id")
+                    PlaceholderScreen(label = "Animal not found: ${route.animalId}")
                 }
             }
-            composable("settings") { 
+            composable<SettingsRoute> {
                 SettingsScreen(
                     onBackClick = { navController.popBackStack() },
-                    onLanguageClick = { navController.navigate("languageSelection") },
-                    onAppInfoClick = { navController.navigate("appInfo") }
+                    onLanguageClick = { navController.navigate(LanguageSelectionRoute) },
+                    onAppInfoClick = { navController.navigate(AppInfoRoute) }
                 )
             }
-            composable("languageSelection") { 
-                com.konit.stampzooaos.feature.settings.LanguageSelectionScreen(
+            composable<LanguageSelectionRoute> {
+                LanguageSelectionScreen(
                     onBackClick = { navController.popBackStack() }
                 )
             }
-            composable("appInfo") { com.konit.stampzooaos.feature.bingo.AppInfoScreen(onBackClick = { navController.popBackStack() }) }
-            composable("bingoDetail") { com.konit.stampzooaos.feature.bingo.BingoDetailScreen(onBackClick = { navController.popBackStack() }) }
-            composable("scanner") {
+            composable<AppInfoRoute> {
+                AppInfoScreen(onBackClick = { navController.popBackStack() })
+            }
+            composable<BingoDetailRoute> {
+                BingoDetailScreen(onBackClick = { navController.popBackStack() })
+            }
+            composable<ScannerRoute> {
                 val context = LocalContext.current
-                val app = context.applicationContext as Application
-                val repo = remember { ZooRepository(app) }
-                val lifecycleOwner = LocalLifecycleOwner.current
-                
-                // 메시지 리소스 미리 로드
+                val scannerVm = hiltViewModel<ScannerViewModel>()
+
                 val successMsg = stringResource(id = R.string.stamp_collected_success)
                 val alreadyCollectedMsg = stringResource(id = R.string.stamp_already_collected)
                 val notFoundMsg = stringResource(id = R.string.animal_not_found)
                 val invalidMsg = stringResource(id = R.string.toast_invalid_qr)
                 val eventComingMsg = stringResource(id = R.string.toast_event_coming)
-                
+
                 fun toast(msg: String) {
                     Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
                 }
-                
+
                 ScannerScreen(
                     onResult = { result ->
-                    val parsed = QRParser.parse(result)
-                    when (parsed) {
-                        is QRPayload.Data -> {
-                            when (parsed.type) {
-                                QRPayload.Type.ANIMAL -> {
-                                    // 동물 스탬프 수집
-                                    val zooData = repo.loadZooData()
-                                    val animal = zooData.animals.firstOrNull { it.id == parsed.id }
-                                    if (animal != null) {
-                                        // 시설 이름 찾기
-                                        val facility = zooData.facilities.firstOrNull { 
-                                            it.facilityId == animal.facilityId || it.id == animal.facilityId 
-                                        }
-                                        val facilityName = facility?.nameKo ?: "Unknown"
-                                        
-                                        // 스탬프 수집
-                                        lifecycleOwner.lifecycleScope.launch {
-                                            val success = repo.collectStamp(
-                                                animalId = parsed.id,
-                                                qrCode = result,
-                                                facilityName = facilityName,
-                                                isTestCollection = true
-                                            )
-                                            if (success) {
-                                                toast(successMsg)
-                                                navController.navigate(Destinations.BingoHome.route)
-                                            } else {
-                                                toast(alreadyCollectedMsg)
-                                                navController.navigate(Destinations.BingoHome.route)
-                                            }
-                                        }
-                                    } else {
-                                        toast(notFoundMsg)
-                                        navController.navigate(Destinations.BingoHome.route)
-                                    }
+                        scannerVm.handleQrResult(
+                            rawResult = result,
+                            onStampSuccess = {
+                                toast(successMsg)
+                                navController.navigate(BingoHomeRoute) {
+                                    popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
                                 }
-                                QRPayload.Type.FACILITY -> {
-                                    // 시설 QR은 탐색으로 이동
-                                    navController.navigate("explorer/detail/${parsed.id}")
+                            },
+                            onAlreadyCollected = {
+                                toast(alreadyCollectedMsg)
+                                navController.navigate(BingoHomeRoute) {
+                                    popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
                                 }
-                                QRPayload.Type.BINGO -> {
-                                    navController.navigate(Destinations.BingoHome.route)
+                            },
+                            onAnimalNotFound = {
+                                toast(notFoundMsg)
+                                navController.navigate(BingoHomeRoute) {
+                                    popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
                                 }
-                                QRPayload.Type.EVENT -> {
-                                    toast(eventComingMsg)
-                                    navController.popBackStack()
+                            },
+                            onFacilityQr = { facilityId ->
+                                navController.navigate(ExplorerDetailRoute(facilityId))
+                            },
+                            onBingoQr = {
+                                navController.navigate(BingoHomeRoute) {
+                                    popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
                                 }
+                            },
+                            onEventQr = {
+                                toast(eventComingMsg)
+                                navController.popBackStack()
+                            },
+                            onInvalidQr = {
+                                toast(invalidMsg)
+                                navController.popBackStack()
                             }
-                        }
-                        else -> { 
-                            toast(invalidMsg)
-                            navController.popBackStack() 
-                        }
-                    }
+                        )
                     },
                     onBackClick = { navController.popBackStack() }
                 )
@@ -251,61 +206,58 @@ fun RootNavHost() {
     }
 }
 
-enum class Destinations(val route: String) {
-    BingoHome("bingoHome"), Explorer("explorer"), FieldGuide("fieldGuide");
-}
+private data class BottomItem(
+    val route: Any,
+    val icon: ImageVector,
+    val labelResId: Int
+)
 
 @Composable
 private fun BottomBar(navController: NavHostController) {
     val items = listOf(
-        BottomItem(Destinations.BingoHome, Icons.Filled.Home),
-        BottomItem(Destinations.Explorer, Icons.Filled.Search),
-        BottomItem(Destinations.FieldGuide, Icons.Filled.Info)
+        BottomItem(BingoHomeRoute, Icons.Filled.Home, R.string.tab_bingo),
+        BottomItem(ExplorerRoute, Icons.Filled.Search, R.string.tab_explorer),
+        BottomItem(FieldGuideRoute, Icons.Filled.Info, R.string.tab_fieldguide)
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     NavigationBar(
-        containerColor = com.konit.stampzooaos.ui.theme.ZooPointBlack,
-        contentColor = com.konit.stampzooaos.ui.theme.ZooWhite
+        containerColor = ZooPointBlack,
+        contentColor = ZooWhite
     ) {
         items.forEach { item ->
             NavigationBarItem(
-                selected = currentDestination.isTopLevelDestinationInHierarchy(item.destination),
+                selected = currentDestination.isSelected(item.route),
                 onClick = {
-                    navController.navigate(item.destination.route) {
+                    navController.navigate(item.route) {
                         popUpTo(navController.graph.findStartDestination().id) { saveState = true }
                         launchSingleTop = true
                         restoreState = true
                     }
                 },
-                icon = { Icon(item.icon, contentDescription = item.destination.route) },
-                label = {
-                    val label = when (item.destination) {
-                        Destinations.BingoHome -> stringResource(id = R.string.tab_bingo)
-                        Destinations.Explorer -> stringResource(id = R.string.tab_explorer)
-                        Destinations.FieldGuide -> stringResource(id = R.string.tab_fieldguide)
-                    }
-                    Text(text = label)
-                },
-                colors = androidx.compose.material3.NavigationBarItemDefaults.colors(
-                    selectedIconColor = com.konit.stampzooaos.ui.theme.ZooPopGreen,
-                    selectedTextColor = com.konit.stampzooaos.ui.theme.ZooPopGreen,
-                    unselectedIconColor = com.konit.stampzooaos.ui.theme.ZooWhite,
-                    unselectedTextColor = com.konit.stampzooaos.ui.theme.ZooWhite,
-                    indicatorColor = com.konit.stampzooaos.ui.theme.ZooPointBlack
+                icon = { Icon(item.icon, contentDescription = null) },
+                label = { Text(text = stringResource(id = item.labelResId)) },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = ZooPopGreen,
+                    selectedTextColor = ZooPopGreen,
+                    unselectedIconColor = ZooWhite,
+                    unselectedTextColor = ZooWhite,
+                    indicatorColor = ZooPointBlack
                 )
             )
         }
     }
 }
 
-private data class BottomItem(
-    val destination: Destinations,
-    val icon: ImageVector
-)
-
-private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: Destinations): Boolean {
-    return this?.hierarchy?.any { it.route == destination.route } == true
+private fun NavDestination?.isSelected(route: Any): Boolean {
+    return this?.hierarchy?.any { dest ->
+        when (route) {
+            is BingoHomeRoute -> dest.hasRoute<BingoHomeRoute>()
+            is ExplorerRoute -> dest.hasRoute<ExplorerRoute>()
+            is FieldGuideRoute -> dest.hasRoute<FieldGuideRoute>()
+            else -> false
+        }
+    } == true
 }
 
 @Composable

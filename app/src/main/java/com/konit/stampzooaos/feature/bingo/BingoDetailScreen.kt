@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,15 +37,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.konit.stampzooaos.R
 import com.konit.stampzooaos.core.localization.getCurrentLanguage
 import com.konit.stampzooaos.core.localization.getLocalizedName
+import com.konit.stampzooaos.core.ui.ZooImage
+import com.konit.stampzooaos.ui.theme.ZooBackground
+import com.konit.stampzooaos.ui.theme.ZooPointBlack
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BingoDetailScreen(
-    vm: BingoHomeViewModel = viewModel(),
+    vm: BingoHomeViewModel = hiltViewModel(),
     onBackClick: () -> Unit
 ) {
     val stampSlots by vm.stampSlots.collectAsState()
@@ -78,7 +82,7 @@ fun BingoDetailScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFF2F2F7),
+                    containerColor = ZooBackground,
                     titleContentColor = Color.Black
                 )
             )
@@ -87,7 +91,7 @@ fun BingoDetailScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFF2F2F7))
+                .background(ZooBackground)
                 .padding(
                     top = padding.calculateTopPadding(),
                     start = 0.dp,
@@ -104,7 +108,7 @@ fun BingoDetailScreen(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 for (row in 0..2) {
-                    androidx.compose.foundation.layout.Row(
+                    Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
@@ -163,12 +167,12 @@ fun BingoDetailStampCard(slot: StampSlot, modifier: Modifier = Modifier) {
         modifier = modifier
             .aspectRatio(1f)
             .clip(RoundedCornerShape(15.dp))
-            .background(com.konit.stampzooaos.ui.theme.ZooPointBlack),
+            .background(ZooPointBlack),
         contentAlignment = Alignment.Center
     ) {
         if (slot.isCollected && slot.animal != null) {
             // 수집된 스탬프 이미지
-            com.konit.stampzooaos.core.ui.ZooImage(
+            ZooImage(
                 resourceName = slot.animal.stampImage,
                 contentDescription = slot.animal.getLocalizedName(currentLanguage),
                 modifier = Modifier

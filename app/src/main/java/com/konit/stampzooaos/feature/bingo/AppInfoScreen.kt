@@ -34,6 +34,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.konit.stampzooaos.R
+import com.konit.stampzooaos.core.ui.ZooImage
+import com.konit.stampzooaos.ui.theme.ZooBackground
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,7 +69,7 @@ fun AppInfoScreen(onBackClick: () -> Unit) {
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFF2F2F7),
+                    containerColor = ZooBackground,
                     titleContentColor = Color.Black
                 )
             )
@@ -76,7 +78,7 @@ fun AppInfoScreen(onBackClick: () -> Unit) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFF2F2F7))
+                .background(ZooBackground)
                 .padding(
                     top = padding.calculateTopPadding(),
                     start = 0.dp,
@@ -97,7 +99,7 @@ fun AppInfoScreen(onBackClick: () -> Unit) {
                     .background(Color.White),
                 contentAlignment = Alignment.Center
             ) {
-                com.konit.stampzooaos.core.ui.ZooImage(
+                ZooImage(
                     resourceName = "app_logo",
                     contentDescription = "App Logo",
                     modifier = Modifier.size(200.dp)

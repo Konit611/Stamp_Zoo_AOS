@@ -57,6 +57,10 @@
     <!-- Settings -->
     <string name="settings_language">语言设置</string>
     <string name="settings_app_info">应用信息</string>
+
+    <!-- Loading -->
+    <string name="loading_animals">正在加载动物信息…</string>
+    <string name="camera_init_error">无法初始化相机</string>
 </resources>
 
 

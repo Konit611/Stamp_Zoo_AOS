@@ -1,6 +1,5 @@
 package com.konit.stampzooaos.feature.explorer
 
-import android.app.Application
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,91 +17,97 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.konit.stampzooaos.ui.navigation.ExplorerDetailRoute
 import com.konit.stampzooaos.R
 import com.konit.stampzooaos.core.localization.getCurrentLanguage
 import com.konit.stampzooaos.core.localization.getLocalizedName
 import com.konit.stampzooaos.core.localization.getLocalizedLocation
+import com.konit.stampzooaos.core.ui.ZooImage
 import com.konit.stampzooaos.data.Facility
 import com.konit.stampzooaos.data.ZooRepository
+import com.konit.stampzooaos.ui.theme.ZooAccentGreen
+import com.konit.stampzooaos.ui.theme.ZooBackground
+import com.konit.stampzooaos.ui.theme.ZooDeepBlue
+import com.konit.stampzooaos.ui.theme.ZooPopGreen
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 enum class ExplorerCategory {
     ALL, ZOO, AQUARIUM
 }
 
-class ExplorerViewModel(app: Application) : AndroidViewModel(app) {
-    private val repo = ZooRepository(app)
+@HiltViewModel
+class ExplorerViewModel @Inject constructor(
+    private val repo: ZooRepository
+) : ViewModel() {
     private val _facilities = MutableStateFlow<List<Facility>>(emptyList())
     val facilities: StateFlow<List<Facility>> = _facilities
-    
+
     private val _selectedCategory = MutableStateFlow(ExplorerCategory.ALL)
     val selectedCategory: StateFlow<ExplorerCategory> = _selectedCategory
-    
-    init {
-        viewModelScope.launch {
-            val data = repo.loadZooData()
-            _facilities.value = data?.facilities ?: emptyList()
-        }
-    }
-    
-    fun setCategory(category: ExplorerCategory) {
-        _selectedCategory.value = category
-    }
-    
-    fun getFilteredFacilities(): List<Facility> {
-        val all = _facilities.value
-        return when (_selectedCategory.value) {
+
+    val filteredFacilities: StateFlow<List<Facility>> = combine(
+        _facilities, _selectedCategory
+    ) { all, category ->
+        when (category) {
             ExplorerCategory.ALL -> all
             ExplorerCategory.ZOO -> all.filter { it.type == "zoo" }
             ExplorerCategory.AQUARIUM -> all.filter { it.type == "aquarium" }
         }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    init {
+        viewModelScope.launch {
+            val data = repo.loadZooData()
+            _facilities.value = data.facilities
+        }
+    }
+
+    fun setCategory(category: ExplorerCategory) {
+        _selectedCategory.value = category
     }
 }
 
 @Composable
 fun ExplorerScreen(
-    vm: ExplorerViewModel = viewModel(),
+    vm: ExplorerViewModel = hiltViewModel(),
     navController: NavController
 ) {
     val selectedCategory by vm.selectedCategory.collectAsState()
-    val filteredFacilities = vm.getFilteredFacilities()
+    val filteredFacilities by vm.filteredFacilities.collectAsState()
     
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF2F2F7))
+            .background(ZooBackground)
             .statusBarsPadding()
     ) {
         Spacer(modifier = Modifier.height(20.dp))
@@ -173,7 +178,7 @@ fun ExplorerScreen(
                 FacilityCard(
                     facility = facility,
                     onClick = {
-                        navController.navigate("explorer/detail/${facility.id}")
+                        navController.navigate(ExplorerDetailRoute(facility.id))
                     }
                 )
             }
@@ -191,7 +196,7 @@ fun CategoryChip(
         modifier = Modifier
             .clip(RoundedCornerShape(20.dp))
             .background(
-                if (selected) com.konit.stampzooaos.ui.theme.ZooPopGreen
+                if (selected) ZooPopGreen
                 else Color.Transparent
             )
             .clickable(onClick = onClick)
@@ -234,7 +239,7 @@ fun FacilityCard(
                     .background(Color.Gray.copy(alpha = 0.1f))
             ) {
                 if (facility.image != null) {
-                    com.konit.stampzooaos.core.ui.ZooImage(
+                    ZooImage(
                         resourceName = facility.image,
                         contentDescription = facility.getLocalizedName(currentLanguage),
                         modifier = Modifier.fillMaxSize()
@@ -274,8 +279,8 @@ fun FacilityCard(
                             .size(32.dp)
                             .clip(CircleShape)
                             .background(
-                                if (isZoo) Color(0xFF00C853)
-                                else com.konit.stampzooaos.ui.theme.ZooDeepBlue
+                                if (isZoo) ZooAccentGreen
+                                else ZooDeepBlue
                             ),
                         contentAlignment = Alignment.Center
                     ) {

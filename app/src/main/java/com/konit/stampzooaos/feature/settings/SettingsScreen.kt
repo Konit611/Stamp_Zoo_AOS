@@ -1,13 +1,12 @@
 package com.konit.stampzooaos.feature.settings
 
-import android.app.Application
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,16 +43,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.konit.stampzooaos.R
 import com.konit.stampzooaos.core.localization.LanguageStore
-import kotlinx.coroutines.flow.StateFlow
+import com.konit.stampzooaos.ui.theme.ZooAccentBlue
+import com.konit.stampzooaos.ui.theme.ZooBackground
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SettingsViewModel(app: Application) : AndroidViewModel(app) {
-    private val langStore = LanguageStore(app)
+@HiltViewModel
+class SettingsViewModel @Inject constructor(
+    private val langStore: LanguageStore
+) : ViewModel() {
     val language = langStore.languageFlow
 
     fun setLanguage(lang: String, activity: androidx.activity.ComponentActivity?) {
@@ -76,7 +80,7 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    vm: SettingsViewModel = viewModel(), 
+    vm: SettingsViewModel = hiltViewModel(),
     onBackClick: (() -> Unit)? = null,
     onLanguageClick: (() -> Unit)? = null,
     onAppInfoClick: (() -> Unit)? = null
@@ -114,7 +118,7 @@ fun SettingsScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFF2F2F7),
+                    containerColor = ZooBackground,
                     titleContentColor = Color.Black
                 )
             )
@@ -123,7 +127,7 @@ fun SettingsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFF2F2F7))
+                .background(ZooBackground)
                 .padding(innerPadding)
                 .padding(horizontal = 20.dp, vertical = 20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -131,7 +135,7 @@ fun SettingsScreen(
             // 언어 설정
             SettingsItem(
                 icon = Icons.Default.Settings,
-                iconTint = Color(0xFF007AFF),
+                iconTint = ZooAccentBlue,
                 title = stringResource(id = R.string.settings_language),
                 subtitle = vm.getLanguageDisplayName(currentLanguage),
                 onClick = { onLanguageClick?.invoke() }
@@ -140,7 +144,7 @@ fun SettingsScreen(
             // 앱 정보
             SettingsItem(
                 icon = Icons.Default.Info,
-                iconTint = Color(0xFF007AFF),
+                iconTint = ZooAccentBlue,
                 title = stringResource(id = R.string.settings_app_info),
                 subtitle = null,
                 onClick = { onAppInfoClick?.invoke() }
@@ -220,7 +224,7 @@ fun SettingsItem(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LanguageSelectionScreen(
-    vm: SettingsViewModel = viewModel(),
+    vm: SettingsViewModel = hiltViewModel(),
     onBackClick: () -> Unit
 ) {
     val currentLanguage by vm.language.collectAsState(initial = "ja")
@@ -255,7 +259,7 @@ fun LanguageSelectionScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFF2F2F7),
+                    containerColor = ZooBackground,
                     titleContentColor = Color.Black
                 )
             )
@@ -264,7 +268,7 @@ fun LanguageSelectionScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFF2F2F7))
+                .background(ZooBackground)
                 .padding(innerPadding)
                 .padding(horizontal = 20.dp, vertical = 20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -321,7 +325,7 @@ fun LanguageButton(
         modifier = modifier.height(56.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = if (isSelected) 
-                Color(0xFF007AFF)
+                ZooAccentBlue
             else 
                 Color.White,
             contentColor = if (isSelected) 

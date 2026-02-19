@@ -42,7 +42,10 @@ import com.konit.stampzooaos.R
 import com.konit.stampzooaos.core.localization.getCurrentLanguage
 import com.konit.stampzooaos.core.localization.getLocalizedName
 import com.konit.stampzooaos.core.localization.getLocalizedDetail
+import com.konit.stampzooaos.core.ui.ZooImage
 import com.konit.stampzooaos.data.Facility
+import com.konit.stampzooaos.ui.theme.ZooAccentGreen
+import com.konit.stampzooaos.ui.theme.ZooBackground
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,7 +86,7 @@ fun ExplorerDetailScreen(
                         Button(
                             onClick = onAnimalsClick,
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF00C853),
+                                containerColor = ZooAccentGreen,
                                 contentColor = Color.White
                             ),
                             shape = RoundedCornerShape(20.dp),
@@ -108,7 +111,7 @@ fun ExplorerDetailScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFF2F2F7),
+                    containerColor = ZooBackground,
                     titleContentColor = Color.Black
                 )
             )
@@ -117,7 +120,7 @@ fun ExplorerDetailScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFF2F2F7))
+                .background(ZooBackground)
                 .padding(
                     top = padding.calculateTopPadding(),
                     start = 0.dp,
@@ -137,7 +140,7 @@ fun ExplorerDetailScreen(
                     .background(Color.Green.copy(alpha = 0.6f))
             ) {
                 if (facility.image != null) {
-                    com.konit.stampzooaos.core.ui.ZooImage(
+                    ZooImage(
                         resourceName = facility.image,
                         contentDescription = facility.getLocalizedName(currentLanguage),
                         modifier = Modifier.fillMaxSize()
@@ -160,18 +163,9 @@ fun ExplorerDetailScreen(
                     // 시설 이름 (길이에 따라 폰트 크기 조정)
                     val facilityName = facility.getLocalizedName(currentLanguage)
                     val fontSize = when {
-                        // 사케노후루사토치토세와 노보리베츠는 더 큰 폰트 크기 적용
-                        facility.facilityId == "chitose" || facility.facilityId == "noboribetsu" -> {
-                            when {
-                                facilityName.length > 12 -> 24.sp
-                                facilityName.length > 8 -> 22.sp
-                                else -> MaterialTheme.typography.headlineMedium.fontSize
-                            }
-                        }
-                        // 일반적인 경우
-                        facilityName.length > 12 -> 22.sp  // 매우 긴 경우
-                        facilityName.length > 8 -> 20.sp  // 긴 경우
-                        else -> MaterialTheme.typography.headlineMedium.fontSize  // 기본
+                        facilityName.length > 12 -> 22.sp
+                        facilityName.length > 8 -> 20.sp
+                        else -> MaterialTheme.typography.headlineMedium.fontSize
                     }
                     
                     Text(
@@ -193,7 +187,7 @@ fun ExplorerDetailScreen(
                                 .size(50.dp)
                                 .clip(RoundedCornerShape(12.dp))
                         ) {
-                            com.konit.stampzooaos.core.ui.ZooImage(
+                            ZooImage(
                                 resourceName = facility.logoImage,
                                 contentDescription = "Logo",
                                 modifier = Modifier.fillMaxSize()

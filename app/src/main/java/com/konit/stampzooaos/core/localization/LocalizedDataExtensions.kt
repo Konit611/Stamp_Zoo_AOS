@@ -1,23 +1,17 @@
 package com.konit.stampzooaos.core.localization
 
-import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.staticCompositionLocalOf
 import com.konit.stampzooaos.data.Animal
 import com.konit.stampzooaos.data.Facility
 
+val LocalLanguage = staticCompositionLocalOf { "ja" }
+
 /**
- * Get current language from LanguageStore
+ * Get current language from CompositionLocal
  */
 @Composable
-fun getCurrentLanguage(): String {
-    val context = LocalContext.current
-    val languageStore = LanguageStore(context.applicationContext as android.app.Application)
-    val language by languageStore.languageFlow.collectAsState(initial = "ja")
-    return language
-}
+fun getCurrentLanguage(): String = LocalLanguage.current
 
 /**
  * Get localized name for Animal based on current language
@@ -28,7 +22,7 @@ fun Animal.getLocalizedName(language: String): String {
         "en" -> nameEn
         "ja" -> nameJa
         "zh" -> nameZh
-        else -> nameJa // fallback to Japanese
+        else -> nameJa
     }
 }
 
@@ -41,7 +35,7 @@ fun Animal.getLocalizedDetail(language: String): String {
         "en" -> detailEn
         "ja" -> detailJa
         "zh" -> detailZh
-        else -> detailJa // fallback to Japanese
+        else -> detailJa
     }
 }
 
@@ -54,7 +48,7 @@ fun Facility.getLocalizedName(language: String): String {
         "en" -> nameEn
         "ja" -> nameJa
         "zh" -> nameZh
-        else -> nameJa // fallback to Japanese
+        else -> nameJa
     }
 }
 
@@ -67,7 +61,7 @@ fun Facility.getLocalizedLocation(language: String): String {
         "en" -> locationEn
         "ja" -> locationJa
         "zh" -> locationZh
-        else -> locationJa // fallback to Japanese
+        else -> locationJa
     }
 }
 
@@ -80,9 +74,6 @@ fun Facility.getLocalizedDetail(language: String): String {
         "en" -> detailEn
         "ja" -> detailJa
         "zh" -> detailZh
-        else -> detailJa // fallback to Japanese
+        else -> detailJa
     }
 }
-
-
-
