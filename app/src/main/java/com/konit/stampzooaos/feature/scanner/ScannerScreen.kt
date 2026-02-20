@@ -61,6 +61,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
+import com.konit.stampzooaos.BuildConfig
 import com.konit.stampzooaos.R
 import com.konit.stampzooaos.ui.theme.ZooNavyBlue
 import com.konit.stampzooaos.ui.theme.ZooWhite
@@ -84,9 +85,9 @@ fun ScannerScreen(onResult: (String) -> Unit, onBackClick: () -> Unit = {}) {
     LaunchedEffect(Unit) {
         if (cameraPermissionState.allPermissionsGranted) {
             isScanning = true
-            Log.d("ScannerScreen", "Camera permission granted, starting scan")
+            if (BuildConfig.DEBUG) Log.d("ScannerScreen", "Camera permission granted, starting scan")
         } else {
-            Log.d("ScannerScreen", "Requesting camera permission")
+            if (BuildConfig.DEBUG) Log.d("ScannerScreen", "Requesting camera permission")
             cameraPermissionState.launchMultiplePermissionRequest()
         }
     }
@@ -183,7 +184,7 @@ fun ScannerScreen(onResult: (String) -> Unit, onBackClick: () -> Unit = {}) {
                                         }
                                     } catch (e: Exception) {
                                         // 진동 권한이 없어도 계속 진행
-                                        Log.w("ScannerScreen", "Vibration failed: ${e.message}")
+                                        if (BuildConfig.DEBUG) Log.w("ScannerScreen", "Vibration failed: ${e.message}")
                                     }
                                     onResult(result)
                                 }
@@ -313,7 +314,7 @@ private fun CameraPreviewView(
                                     }
                                 }
                                 .addOnFailureListener { e ->
-                                    Log.e("ScannerScreen", "Barcode scanning error", e)
+                                    if (BuildConfig.DEBUG) Log.e("ScannerScreen", "Barcode scanning error", e)
                                 }
                                 .addOnCompleteListener {
                                     imageProxy.close()
@@ -330,10 +331,10 @@ private fun CameraPreviewView(
                         preview,
                         imageAnalyzer
                     )
-                    Log.d("ScannerScreen", "Camera bound successfully")
+                    if (BuildConfig.DEBUG) Log.d("ScannerScreen", "Camera bound successfully")
                 } catch (e: Exception) {
                     onError("Camera init error: ${e.message}")
-                    Log.e("ScannerScreen", "Camera initialization error", e)
+                    if (BuildConfig.DEBUG) Log.e("ScannerScreen", "Camera initialization error", e)
                 }
             }, ContextCompat.getMainExecutor(ctx))
             

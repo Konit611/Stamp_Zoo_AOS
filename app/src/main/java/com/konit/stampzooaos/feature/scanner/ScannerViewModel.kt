@@ -67,6 +67,39 @@ class ScannerViewModel @Inject constructor(
                     }
                 }
             }
+            is QRPayload.FacilityAnimal -> {
+                val zooData = repo.loadZooData()
+                val facility = zooData.facilities.firstOrNull {
+                    it.facilityId == parsed.facilityId || it.id == parsed.facilityId
+                }
+                if (facility == null) {
+                    onAnimalNotFound()
+                    return
+                }
+                val facilityAnimals = zooData.animals.filter {
+                    it.facilityId == facility.facilityId
+                }
+                val animal = facilityAnimals.getOrNull(parsed.animalIndex)
+                if (animal == null) {
+                    onAnimalNotFound()
+                    return
+                }
+                val facilityName = facility.nameJa
+
+                viewModelScope.launch {
+                    val success = repo.collectStamp(
+                        animalId = animal.id,
+                        qrCode = rawResult,
+                        facilityName = facilityName,
+                        isTestCollection = (parsed.mode == QRPayload.Mode.TEST)
+                    )
+                    if (success) {
+                        onStampSuccess()
+                    } else {
+                        onAlreadyCollected()
+                    }
+                }
+            }
             else -> {
                 onInvalidQr()
             }

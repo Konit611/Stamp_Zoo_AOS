@@ -51,6 +51,7 @@ import com.konit.stampzooaos.ui.theme.ZooBackground
 import com.konit.stampzooaos.ui.theme.ZooPointBlack
 import com.konit.stampzooaos.ui.theme.ZooPopGreen
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -78,9 +79,11 @@ class BingoHomeViewModel @Inject constructor(
     private val zooData by lazy { repo.loadZooData() }
 
     init {
-        val data = repo.loadZooData()
-        _bingo.value = data.bingoCards.firstOrNull { it.isActive }
-        
+        viewModelScope.launch(Dispatchers.IO) {
+            val data = repo.loadZooData()
+            _bingo.value = data.bingoCards.firstOrNull { it.isActive }
+        }
+
         // 수집된 스탬프 로드
         viewModelScope.launch {
             repo.getAllBingoAnimals().collect { bingoAnimals ->

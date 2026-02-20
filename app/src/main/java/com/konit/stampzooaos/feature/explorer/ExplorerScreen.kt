@@ -52,6 +52,7 @@ import com.konit.stampzooaos.ui.theme.ZooBackground
 import com.konit.stampzooaos.ui.theme.ZooDeepBlue
 import com.konit.stampzooaos.ui.theme.ZooPopGreen
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -74,6 +75,9 @@ class ExplorerViewModel @Inject constructor(
     private val _selectedCategory = MutableStateFlow(ExplorerCategory.ALL)
     val selectedCategory: StateFlow<ExplorerCategory> = _selectedCategory
 
+    private val _collectedAnimalIds = MutableStateFlow<Set<String>>(emptySet())
+    val collectedAnimalIds: StateFlow<Set<String>> = _collectedAnimalIds
+
     val filteredFacilities: StateFlow<List<Facility>> = combine(
         _facilities, _selectedCategory
     ) { all, category ->
@@ -85,9 +89,14 @@ class ExplorerViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val data = repo.loadZooData()
             _facilities.value = data.facilities
+        }
+        viewModelScope.launch {
+            repo.getCollectedAnimalIds().collect { ids ->
+                _collectedAnimalIds.value = ids.toSet()
+            }
         }
     }
 

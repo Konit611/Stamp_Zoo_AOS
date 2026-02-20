@@ -30,5 +30,11 @@ interface StampCollectionDao {
     
     @Query("SELECT * FROM stamp_collections WHERE id = :id LIMIT 1")
     suspend fun getStampCollectionById(id: Long): StampCollectionEntity?
+
+    @Query("SELECT DISTINCT animal_id FROM stamp_collections WHERE animal_id != ''")
+    fun getCollectedAnimalIds(): Flow<List<String>>
+
+    @Query("SELECT * FROM stamp_collections ORDER BY collected_at DESC")
+    suspend fun getAllStampCollectionsSync(): List<StampCollectionEntity>
 }
 

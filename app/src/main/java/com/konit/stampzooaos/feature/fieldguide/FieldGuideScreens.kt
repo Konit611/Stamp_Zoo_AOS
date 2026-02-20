@@ -52,7 +52,6 @@ import com.konit.stampzooaos.core.localization.getLocalizedDetail
 import com.konit.stampzooaos.core.ui.ZooImage
 import com.konit.stampzooaos.data.Animal
 import com.konit.stampzooaos.data.ZooRepository
-import com.konit.stampzooaos.data.local.entity.BingoAnimalEntity
 import com.konit.stampzooaos.ui.theme.ZooBackground
 import com.konit.stampzooaos.ui.theme.ZooPointBlack
 import com.konit.stampzooaos.ui.theme.ZooPopGreen
@@ -85,16 +84,16 @@ class FieldGuideViewModel @Inject constructor(
         get() = zooData.animals
 
     init {
-        // 수집된 동물 로드
+        // 수집된 동물 로드 (StampCollection 기반)
         viewModelScope.launch {
-            repo.getAllBingoAnimals().collect { bingoAnimals ->
-                updateCollectedAnimals(bingoAnimals)
+            repo.getCollectedAnimalIds().collect { collectedIds ->
+                updateCollectedAnimals(collectedIds)
             }
         }
     }
-    
-    private fun updateCollectedAnimals(bingoAnimals: List<BingoAnimalEntity>) {
-        val collectedAnimalIds = bingoAnimals.map { it.animalId }.toSet()
+
+    private fun updateCollectedAnimals(collectedIds: List<String>) {
+        val collectedAnimalIds = collectedIds.toSet()
         val collected = zooData.animals.filter { it.id in collectedAnimalIds }
         _collectedAnimals.value = collected
         

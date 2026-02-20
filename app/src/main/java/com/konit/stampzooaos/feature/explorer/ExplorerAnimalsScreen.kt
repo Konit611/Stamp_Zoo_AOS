@@ -63,7 +63,18 @@ class ExplorerAnimalsViewModel @Inject constructor(
 ) : ViewModel() {
     private val _animals = MutableStateFlow<List<Animal>>(emptyList())
     val animals: StateFlow<List<Animal>> = _animals
-    
+
+    private val _collectedAnimalIds = MutableStateFlow<Set<String>>(emptySet())
+    val collectedAnimalIds: StateFlow<Set<String>> = _collectedAnimalIds
+
+    init {
+        viewModelScope.launch {
+            repo.getCollectedAnimalIds().collect { ids ->
+                _collectedAnimalIds.value = ids.toSet()
+            }
+        }
+    }
+
     fun loadAnimals(facilityId: String) {
         viewModelScope.launch {
             val data = repo.loadZooData()

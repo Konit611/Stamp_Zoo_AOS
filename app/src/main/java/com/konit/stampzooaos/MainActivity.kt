@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
+
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.CompositionLocalProvider
@@ -29,7 +30,7 @@ class MainActivity : ComponentActivity() {
     override fun attachBaseContext(newBase: Context) {
         val prefs = newBase.getSharedPreferences("language_prefs", Context.MODE_PRIVATE)
         val language = prefs.getString("language_tag", "ja") ?: "ja"
-        Log.d("MainActivity", "attachBaseContext: language = $language")
+        if (BuildConfig.DEBUG) Log.d("MainActivity", "attachBaseContext: language = $language")
         val context = updateLocale(newBase, language)
         super.attachBaseContext(context)
     }

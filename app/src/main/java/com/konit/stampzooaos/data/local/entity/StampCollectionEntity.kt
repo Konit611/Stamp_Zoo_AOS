@@ -32,6 +32,9 @@ data class StampCollectionEntity(
     val userLongitude: Double? = null,
     
     @ColumnInfo(name = "is_test_collection")
-    val isTestCollection: Boolean = false
+    val isTestCollection: Boolean = false,
+
+    @ColumnInfo(name = "animal_id")
+    val animalId: String = ""
 )
 

@@ -85,6 +85,14 @@ class ZooRepository(private val context: Context) {
         stampCollectionDao.deleteAllStampCollections()
     }
 
+    fun getCollectedAnimalIds(): Flow<List<String>> {
+        return stampCollectionDao.getCollectedAnimalIds()
+    }
+
+    suspend fun getAllStampCollectionsSync(): List<StampCollectionEntity> {
+        return stampCollectionDao.getAllStampCollectionsSync()
+    }
+
     /**
      * 새로운 스탬프를 수집하는 통합 메서드
      * BingoAnimal과 StampCollection을 모두 트랜잭션으로 저장
@@ -130,7 +138,8 @@ class ZooRepository(private val context: Context) {
                 facilityName = facilityName,
                 userLatitude = userLatitude,
                 userLongitude = userLongitude,
-                isTestCollection = isTestCollection
+                isTestCollection = isTestCollection,
+                animalId = animalId
             )
             stampCollectionDao.insertStampCollection(stampCollection)
 
