@@ -17,7 +17,9 @@ data class Metadata(
     val version: String,
     @SerialName("last_updated") val lastUpdated: String,
     val description: String,
-    @SerialName("data_count") val dataCount: Int
+    @SerialName("data_count") val dataCount: Int,
+    // 시즌(연도). 구버전 JSON 호환을 위해 nullable. iOS와 동일하게 String.
+    val season: String? = null
 )
 
 @Serializable
