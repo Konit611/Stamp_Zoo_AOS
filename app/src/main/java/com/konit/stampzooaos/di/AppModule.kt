@@ -2,6 +2,7 @@ package com.konit.stampzooaos.di
 
 import android.app.Application
 import com.konit.stampzooaos.core.localization.LanguageStore
+import com.konit.stampzooaos.core.prize.PrizeStore
 import com.konit.stampzooaos.data.ZooRepository
 import dagger.Module
 import dagger.Provides
@@ -23,5 +24,11 @@ object AppModule {
     @Singleton
     fun provideLanguageStore(app: Application): LanguageStore {
         return LanguageStore(app)
+    }
+
+    @Provides
+    @Singleton
+    fun providePrizeStore(app: Application): PrizeStore {
+        return PrizeStore(app)
     }
 }

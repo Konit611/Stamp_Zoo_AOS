@@ -61,6 +61,28 @@
     <!-- Loading -->
     <string name="loading_animals">正在加载动物信息…</string>
     <string name="camera_init_error">无法初始化相机</string>
+
+    <!-- Survey / Prize / Season (FEATURE_TODO 2026) -->
+    <string name="survey_title">问卷调查</string>
+    <string name="survey_body">请告诉我们您对邮票拉力赛的看法。您的反馈有助于我们打造更好的体验。</string>
+    <string name="survey_take">参与问卷</string>
+    <string name="coming_soon_title">正在准备中</string>
+    <string name="survey_coming_message">问卷链接即将开放。</string>
+    <string name="prize_apply">申请奖品</string>
+    <string name="prize_applied">申请已完成</string>
+    <string name="prize_confirm_title">奖品申请</string>
+    <string name="prize_confirm_message">将跳转到奖品申请页面。是否继续？</string>
+    <string name="prize_apply_action">申请</string>
+    <string name="prize_coming_message">奖品申请链接即将开放。</string>
+    <string name="prize_unlock_title">解除申请完成</string>
+    <string name="prize_unlock_password">密码</string>
+    <string name="prize_unlock_action">解除</string>
+    <string name="prize_unlock_message">输入密码后将解除申请完成状态。</string>
+    <string name="prize_unlock_failed_title">解除失败</string>
+    <string name="prize_unlock_failed_message">密码不正确。</string>
+    <string name="toast_expired_season">这是上一季（去年）的二维码。请扫描今年集邮拉力赛的二维码。</string>
+    <string name="dialog_ok">确认</string>
+    <string name="dialog_cancel">取消</string>
 </resources>
 
 

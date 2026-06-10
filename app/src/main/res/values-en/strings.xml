@@ -61,6 +61,28 @@
     <!-- Loading -->
     <string name="loading_animals">Loading animals…</string>
     <string name="camera_init_error">Unable to initialize camera</string>
+
+    <!-- Survey / Prize / Season (FEATURE_TODO 2026) -->
+    <string name="survey_title">Survey</string>
+    <string name="survey_body">Tell us what you think about the stamp rally. Your feedback helps us create a better experience.</string>
+    <string name="survey_take">Take the Survey</string>
+    <string name="coming_soon_title">Coming Soon</string>
+    <string name="survey_coming_message">The survey link will be available soon.</string>
+    <string name="prize_apply">Apply for Prize</string>
+    <string name="prize_applied">Application Completed</string>
+    <string name="prize_confirm_title">Prize Application</string>
+    <string name="prize_confirm_message">You will be taken to the prize application page. Continue?</string>
+    <string name="prize_apply_action">Apply</string>
+    <string name="prize_coming_message">The prize application link will be available soon.</string>
+    <string name="prize_unlock_title">Reset Application</string>
+    <string name="prize_unlock_password">Password</string>
+    <string name="prize_unlock_action">Reset</string>
+    <string name="prize_unlock_message">Enter the password to reset the application status.</string>
+    <string name="prize_unlock_failed_title">Reset Failed</string>
+    <string name="prize_unlock_failed_message">The password is incorrect.</string>
+    <string name="toast_expired_season">This QR code is from a previous season. Please scan this year\'s stamp rally QR code.</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
 </resources>
 
 

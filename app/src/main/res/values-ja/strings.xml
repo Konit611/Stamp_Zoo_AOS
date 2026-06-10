@@ -61,6 +61,28 @@
     <!-- Loading -->
     <string name="loading_animals">動物情報を読み込み中…</string>
     <string name="camera_init_error">カメラを初期化できません</string>
+
+    <!-- Survey / Prize / Season (FEATURE_TODO 2026) -->
+    <string name="survey_title">アンケート</string>
+    <string name="survey_body">スタンプラリーについてのご意見をお聞かせください。アンケートへのご協力が、より良い体験づくりに役立ちます。</string>
+    <string name="survey_take">アンケートに回答する</string>
+    <string name="coming_soon_title">準備中です</string>
+    <string name="survey_coming_message">アンケートのリンクは間もなく公開されます。</string>
+    <string name="prize_apply">景品応募</string>
+    <string name="prize_applied">応募が完了しました</string>
+    <string name="prize_confirm_title">景品応募</string>
+    <string name="prize_confirm_message">景品応募ページに移動します。よろしいですか？</string>
+    <string name="prize_apply_action">応募する</string>
+    <string name="prize_coming_message">景品応募のリンクは間もなく公開されます。</string>
+    <string name="prize_unlock_title">応募完了の解除</string>
+    <string name="prize_unlock_password">パスワード</string>
+    <string name="prize_unlock_action">解除</string>
+    <string name="prize_unlock_message">パスワードを入力すると応募完了状態が解除されます。</string>
+    <string name="prize_unlock_failed_title">解除に失敗しました</string>
+    <string name="prize_unlock_failed_message">パスワードが正しくありません。</string>
+    <string name="toast_expired_season">昨年(以前のシーズン)のQRコードです。今年のスタンプラリーのQRコードをスキャンしてください。</string>
+    <string name="dialog_ok">確認</string>
+    <string name="dialog_cancel">キャンセル</string>
 </resources>
 
 

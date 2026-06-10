@@ -61,4 +61,26 @@
     <!-- Loading -->
     <string name="loading_animals">동물 정보를 불러오는 중…</string>
     <string name="camera_init_error">카메라를 초기화할 수 없습니다</string>
+
+    <!-- Survey / Prize / Season (FEATURE_TODO 2026) -->
+    <string name="survey_title">설문조사</string>
+    <string name="survey_body">스탬프 랠리에 대한 의견을 들려주세요. 설문에 참여하시면 더 나은 경험을 만드는 데 큰 도움이 됩니다.</string>
+    <string name="survey_take">설문 참여하기</string>
+    <string name="coming_soon_title">준비 중입니다</string>
+    <string name="survey_coming_message">설문 링크가 곧 제공될 예정입니다.</string>
+    <string name="prize_apply">경품 응모</string>
+    <string name="prize_applied">응모가 완료되었습니다</string>
+    <string name="prize_confirm_title">경품 응모</string>
+    <string name="prize_confirm_message">경품 응모 페이지로 이동합니다. 진행하시겠습니까?</string>
+    <string name="prize_apply_action">응모하기</string>
+    <string name="prize_coming_message">경품 응모 링크가 곧 제공될 예정입니다.</string>
+    <string name="prize_unlock_title">응모 완료 해제</string>
+    <string name="prize_unlock_password">비밀번호</string>
+    <string name="prize_unlock_action">해제</string>
+    <string name="prize_unlock_message">비밀번호를 입력하면 응모 완료 상태가 해제됩니다.</string>
+    <string name="prize_unlock_failed_title">해제 실패</string>
+    <string name="prize_unlock_failed_message">비밀번호가 올바르지 않습니다.</string>
+    <string name="toast_expired_season">이전 시즌(작년)의 QR 코드입니다. 올해 스탬프 랠리의 QR 코드를 스캔해 주세요.</string>
+    <string name="dialog_ok">확인</string>
+    <string name="dialog_cancel">취소</string>
 </resources>

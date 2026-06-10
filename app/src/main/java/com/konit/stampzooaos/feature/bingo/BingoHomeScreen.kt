@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -28,6 +29,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,11 +46,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.konit.stampzooaos.R
 import com.konit.stampzooaos.core.localization.getCurrentLanguage
 import com.konit.stampzooaos.core.localization.getLocalizedName
+import com.konit.stampzooaos.core.prize.PrizeStore
+import com.konit.stampzooaos.core.security.UnlockSecret
 import com.konit.stampzooaos.core.ui.ZooImage
 import com.konit.stampzooaos.data.Animal
 import com.konit.stampzooaos.data.BingoCard
 import com.konit.stampzooaos.data.ZooRepository
 import com.konit.stampzooaos.data.local.entity.BingoAnimalEntity
+import com.konit.stampzooaos.feature.survey.SurveyModal
 import com.konit.stampzooaos.ui.theme.ZooBackground
 import com.konit.stampzooaos.ui.theme.ZooPointBlack
 import com.konit.stampzooaos.ui.theme.ZooPopGreen
@@ -65,17 +72,23 @@ data class StampSlot(
 
 @HiltViewModel
 class BingoHomeViewModel @Inject constructor(
-    private val repo: ZooRepository
+    private val repo: ZooRepository,
+    private val prizeStore: PrizeStore
 ) : ViewModel() {
     private val _bingo = MutableStateFlow<BingoCard?>(null)
     val bingo: StateFlow<BingoCard?> = _bingo
-    
+
     private val _stampSlots = MutableStateFlow<List<StampSlot>>(emptyList())
     val stampSlots: StateFlow<List<StampSlot>> = _stampSlots
-    
+
     private val _collectedCount = MutableStateFlow(0)
     val collectedCount: StateFlow<Int> = _collectedCount
-    
+
+    // 현재 시즌 기준 경품 응모 완료 상태
+    private val currentSeason: String = repo.getCurrentSeason()
+    private val _prizeApplied = MutableStateFlow(prizeStore.isApplied(currentSeason))
+    val prizeApplied: StateFlow<Boolean> = _prizeApplied
+
     private val zooData by lazy { repo.loadZooData() }
 
     init {
@@ -125,6 +138,27 @@ class BingoHomeViewModel @Inject constructor(
     fun getProgressRate(): Float {
         return _collectedCount.value / 9f
     }
+
+    /**
+     * 경품 응모 완료로 표시. URL이 있을 때만 호출되며 시즌별로 저장.
+     */
+    fun applyPrize() {
+        prizeStore.setApplied(true, currentSeason)
+        _prizeApplied.value = true
+    }
+
+    /**
+     * 숨김 해제: 비밀번호가 맞으면 응모 완료 상태 해제. 성공 여부 반환.
+     */
+    fun unlockPrize(password: String): Boolean {
+        return if (UnlockSecret.verify(password)) {
+            prizeStore.setApplied(false, currentSeason)
+            _prizeApplied.value = false
+            true
+        } else {
+            false
+        }
+    }
 }
 
 
@@ -139,7 +173,9 @@ fun BingoHomeScreen(
     val bingo by vm.bingo.collectAsState()
     val stampSlots by vm.stampSlots.collectAsState()
     val collectedCount by vm.collectedCount.collectAsState()
-    
+
+    var showSurvey by remember { mutableStateOf(false) }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -153,7 +189,8 @@ fun BingoHomeScreen(
             // 상단 헤더
             HeaderSection(
                 onAppInfoClick = onAppInfoClick,
-                onSettingsClick = onSettingsClick
+                onSettingsClick = onSettingsClick,
+                onSurveyClick = { showSurvey = true }
             )
 
             // 메인 컨텐츠
@@ -180,6 +217,10 @@ fun BingoHomeScreen(
                 Spacer(modifier = Modifier.weight(1f))
             }
         }
+
+        if (showSurvey) {
+            SurveyModal(onDismiss = { showSurvey = false })
+        }
     }
 }
 
@@ -187,7 +228,8 @@ fun BingoHomeScreen(
 @Composable
 fun HeaderSection(
     onAppInfoClick: () -> Unit,
-    onSettingsClick: () -> Unit
+    onSettingsClick: () -> Unit,
+    onSurveyClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -213,14 +255,30 @@ fun HeaderSection(
             )
         }
 
-        // 설정 아이콘
-        IconButton(onClick = onSettingsClick) {
-            Icon(
-                imageVector = Icons.Default.Settings,
-                contentDescription = "Settings",
-                tint = Color.Black,
-                modifier = Modifier.size(28.dp)
-            )
+        // 우측 아이콘들: 설문 + 설정
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // 설문(アンケート) 버튼 — 설정 톱니 왼쪽
+            IconButton(onClick = onSurveyClick) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.List,
+                    contentDescription = stringResource(id = R.string.survey_title),
+                    tint = Color.Black,
+                    modifier = Modifier.size(28.dp)
+                )
+            }
+
+            // 설정 아이콘
+            IconButton(onClick = onSettingsClick) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = "Settings",
+                    tint = Color.Black,
+                    modifier = Modifier.size(28.dp)
+                )
+            }
         }
     }
 }
