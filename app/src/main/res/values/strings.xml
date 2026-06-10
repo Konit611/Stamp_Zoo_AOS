@@ -36,7 +36,7 @@
     <string name="bingo_qr_button">QR로 스탬프 취득</string>
     
     <!-- Bingo Detail -->
-    <string name="bingo_detail">빙고 상세</string>
+    <string name="bingo_detail">스탬프 랠리 상세</string>
     <string name="stamp_rally_title">와쿠와쿠\n스탬프 랠리</string>
     <string name="stamp_rally_description">동물원과 수족관을 탐험하며 다양한 동물들을 만나보세요! QR 코드를 스캔하여 스탬프를 수집하고, 빙고를 완성해보세요.\n\n각 동물들의 특별한 이야기와 함께 재미있는 학습 경험을 제공합니다. 모든 스탬프를 모아서 특별한 보상을 받아보세요!\n\n가족과 함께 즐기는 교육적이고 재미있는 체험이 여러분을 기다리고 있습니다.</string>
     
