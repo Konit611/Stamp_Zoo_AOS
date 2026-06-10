@@ -24,9 +24,17 @@ class ScannerViewModel @Inject constructor(
         onFacilityQr: (String) -> Unit,
         onBingoQr: () -> Unit,
         onEventQr: () -> Unit,
-        onInvalidQr: () -> Unit
+        onInvalidQr: () -> Unit,
+        onExpiredSeason: () -> Unit
     ) {
         val parsed = QRParser.parse(rawResult)
+
+        // 시즌 검증: QR에 season이 있고 현재 시즌보다 과거이면 작년(이전 시즌) QR로 안내.
+        if (parsed != null && isExpiredSeason(parsed.season)) {
+            onExpiredSeason()
+            return
+        }
+
         when (parsed) {
             is QRPayload.Data -> {
                 when (parsed.type) {
@@ -104,5 +112,18 @@ class ScannerViewModel @Inject constructor(
                 onInvalidQr()
             }
         }
+    }
+
+    /**
+     * QR 시즌이 현재 시즌보다 과거(작년 이전)인지 판정.
+     * 둘 다 숫자면 숫자 비교, 아니면 문자열 비교로 폴백. iOS와 동일.
+     * season이 없으면(구형 QR) 만료로 보지 않음.
+     */
+    private fun isExpiredSeason(qrSeason: String?): Boolean {
+        if (qrSeason.isNullOrEmpty()) return false
+        val current = repo.getCurrentSeason()
+        val q = qrSeason.toIntOrNull()
+        val c = current.toIntOrNull()
+        return if (q != null && c != null) q < c else qrSeason < current
     }
 }

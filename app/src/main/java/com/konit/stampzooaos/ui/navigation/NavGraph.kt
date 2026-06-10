@@ -154,6 +154,7 @@ fun RootNavHost() {
                 val notFoundMsg = stringResource(id = R.string.animal_not_found)
                 val invalidMsg = stringResource(id = R.string.toast_invalid_qr)
                 val eventComingMsg = stringResource(id = R.string.toast_event_coming)
+                val expiredSeasonMsg = stringResource(id = R.string.toast_expired_season)
 
                 fun toast(msg: String) {
                     Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
@@ -195,6 +196,10 @@ fun RootNavHost() {
                             },
                             onInvalidQr = {
                                 toast(invalidMsg)
+                                navController.popBackStack()
+                            },
+                            onExpiredSeason = {
+                                toast(expiredSeasonMsg)
                                 navController.popBackStack()
                             }
                         )
